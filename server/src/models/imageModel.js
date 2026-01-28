@@ -1,13 +1,11 @@
 const db = require('../config/db');
 
 const ImageModel = {
-  create: async (userId, filename, originalName, transformations = {}) => {
+  create: async (userId, filename, originalName, transformations) => {
     const query = `
-      INSERT INTO images (user_id, filename, original_name, transformations, created_at)
-      VALUES ($1, $2, $3, $4, NOW())
-      RETURNING *;
-    `;
-    const values = [userId, filename, originalName, JSON.stringify(transformations)];
+      INSERT INTO images (user_id, filename, original_name, transformations)
+      VALUES ($1, $2, $3, $4) RETURNING *`;
+    const values = [userId, filename, originalName, transformations];
     const { rows } = await db.query(query, values);
     return rows[0];
   },
